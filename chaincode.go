@@ -69,6 +69,7 @@ func (t *SimpleChaincode) createAccount(stub *shim.ChaincodeStub, args []string)
 	// 0 	account		json
 
 	if len(args) != 1 {
+		fmt.Println("Incorrect number of arguments. Expecting 1")
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
@@ -79,21 +80,25 @@ func (t *SimpleChaincode) createAccount(stub *shim.ChaincodeStub, args []string)
 	// Checking username existence.
 	res, err := stub.GetState(account.Username)
 	if res != nil {
+		fmt.Println("Username already exists.")
 		return nil, errors.New("Username already exists.")
 	}
 	if err != nil {
+		fmt.Println("Error fetching username.")
 		return nil, errors.New("Error fetching username.")
 	}
 
 	// Append the username to the array of indexes.
 	err = append_id(stub, accountIndexStr, account.Username)
 	if err != nil {
+		fmt.Println("Error appending new username.")
 		return nil, errors.New("Error appending new username")
 	}
 
 	accountBytes, err := json.Marshal(account)
 	err = stub.PutState(account.Username, accountBytes)
 	if err != nil {
+		fmt.Println("Error putting account on ledger.")
 		return nil, errors.New("Error putting account on ledger")
 	}
 
@@ -118,18 +123,20 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 func (t *SimpleChaincode) getAccount(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	// Args
 	//	0
-	//	accountID
+	//	username
 
 	if len(args) != 1 {
+		fmt.Println("Incorrect number of arguments. Expecting 1")
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	var accountID = args[0]
+	var username = args[0]
 
 	// Get the client
-	accountBytes, err := stub.GetState(accountID)
+	accountBytes, err := stub.GetState(username)
 	if err != nil {
-		return nil, errors.New("Error fetching accountID")
+		fmt.Println("Error fetching username.")
+		return nil, errors.New("Error fetching username")
 	}
 
 	if accountBytes == nil {
