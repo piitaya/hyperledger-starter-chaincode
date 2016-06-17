@@ -304,7 +304,7 @@ func (t *SimpleChaincode) getThings(stub *shim.ChaincodeStub, args []string) ([]
 	//  username
 
 
-	if len(args) != 1 || len(args) != 2 {
+	if len(args) != 1 && len(args) != 2 {
 		fmt.Println("Incorrect number of arguments. Expecting 1 or 2")
 		return nil, errors.New("Incorrect number of arguments. Expecting 1 or 2")
 	}
