@@ -15,7 +15,7 @@ var thingsIndexStr = "_thingsIndex"			//name for the key/value that will store a
 var accountsIndexStr = "_accountsIndex"		//name for the key/value that will store all accounts
 
 type Thing struct {
-	Id 			string	`json:"name"`
+	Id 			string	`json:"id"`
 	Name		string  `json:"name"`
 	Price		int     `json:"price"`
 	InMarket	bool	`json:"inMarket"`
