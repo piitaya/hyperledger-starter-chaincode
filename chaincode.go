@@ -303,7 +303,8 @@ func (t *SimpleChaincode) buyThing(stub *shim.ChaincodeStub, args []string) ([]b
 		return nil, errors.New("Error putting account on ledger.")
 	}
 
-	return nil, nil
+	value, err := json.Marshal(to)
+	return value, nil
 }
 
 // =============================================================================
