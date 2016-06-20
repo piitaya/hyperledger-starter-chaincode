@@ -240,15 +240,67 @@ func (t *SimpleChaincode) buyThing(stub *shim.ChaincodeStub, args []string) ([]b
 		return nil, errors.New("Error unmarshalling bytes into thing")
 	}
 
+	toAsBytes, err := stub.GetState(username)
+	if err != nil {
+		fmt.Println("Error fetching account" + username)
+		return nil, errors.New("Error fetching account " + username)
+	}
+
+	// Get current owner account
+	var to Account
+	err = json.Unmarshal(toAsBytes, &to)
+	if err != nil {
+		fmt.Println("Error unmarshalling bytes into account")
+		return nil, errors.New("Error unmarshalling bytes into account")
+	}
+
+	fromAsBytes, err := stub.GetState(thing.Owner)
+	if err != nil {
+		fmt.Println("Error fetching account" + thing.Owner)
+		return nil, errors.New("Error fetching account " + thing.Owner)
+	}
+
+	// Get future owner account
+	var from Account
+	err = json.Unmarshal(fromAsBytes, &from)
+	if err != nil {
+		fmt.Println("Error unmarshalling bytes into account")
+		return nil, errors.New("Error unmarshalling bytes into account")
+	}
+
+	if thing.Price >= to.Money {
+		fmt.Println("Not enough money")
+		return nil, errors.New("Not enough money")
+	}
+
+	// Perform trade
+	to.Money -= thing.Price
+	from.Money += thing.Price
+
 	thing.Owner = username
 	thing.Price = 0
 	thing.InMarket = false
 
+	// Save thing
 	thingBytes, err := json.Marshal(thing)
 	err = stub.PutState(thing.Id, thingBytes)
 	if err != nil {
 		fmt.Println("Error putting thing on ledger.")
 		return nil, errors.New("Error putting thing on ledger.")
+	}
+
+	toBytes, err := json.Marshal(to)
+	err = stub.PutState(to.Username, toBytes)
+	if err != nil {
+		fmt.Println("Error putting account on ledger.")
+		return nil, errors.New("Error putting account on ledger.")
+	}
+
+	fromBytes, err := json.Marshal(from)
+	err = stub.PutState(from.Username, fromBytes)
+	if err != nil {
+		fmt.Println("Error putting account on ledger.")
+		return nil, errors.New("Error putting account on ledger.")
 	}
 
 	return nil, nil
