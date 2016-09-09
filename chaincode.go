@@ -40,7 +40,7 @@ func main() {
 // =============================================================================
 // Init
 // =============================================================================
-func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
 	return nil, nil
 }
@@ -48,7 +48,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 // =============================================================================
 // Invoke
 // =============================================================================
-func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running: " + function)
 
 	// Handle different functions
@@ -68,7 +68,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	return nil, errors.New("Received unknown invoke function" + function)
 }
 
-func (t *SimpleChaincode) createAccount(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) createAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	// Args
 	// 0 	account		json
@@ -110,7 +110,7 @@ func (t *SimpleChaincode) createAccount(stub *shim.ChaincodeStub, args []string)
 	return nil, nil
 }
 
-func (t *SimpleChaincode) createThing(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) createThing(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	// Args
 	// 0 	username	json
@@ -160,7 +160,7 @@ func (t *SimpleChaincode) createThing(stub *shim.ChaincodeStub, args []string) (
 	return nil, nil
 }
 
-func (t *SimpleChaincode) sellThing(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) sellThing(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	// Args
 	// 0 	username	json
@@ -209,7 +209,7 @@ func (t *SimpleChaincode) sellThing(stub *shim.ChaincodeStub, args []string) ([]
 	return nil, nil
 }
 
-func (t *SimpleChaincode) buyThing(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) buyThing(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	// Args
 	// 0 	username	json
@@ -306,7 +306,7 @@ func (t *SimpleChaincode) buyThing(stub *shim.ChaincodeStub, args []string) ([]b
 // =============================================================================
 // Query
 // =============================================================================
-func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running: " + function)
 
 	// Handle different functions
@@ -321,7 +321,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 	return nil, errors.New("Received unknown query function" + function)
 }
 
-func (t *SimpleChaincode) getAccount(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) getAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	// Args
 	//	0    username
 
@@ -346,7 +346,7 @@ func (t *SimpleChaincode) getAccount(stub *shim.ChaincodeStub, args []string) ([
 	return accountBytes, nil
 }
 
-func (t *SimpleChaincode) getThings(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) getThings(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	//Args
 	//  market
@@ -401,7 +401,7 @@ func (t *SimpleChaincode) getThings(stub *shim.ChaincodeStub, args []string) ([]
 // =============================================================================
 // Utils
 // =============================================================================
-func append_id(stub *shim.ChaincodeStub, indexStr string, id string) (error) {
+func append_id(stub shim.ChaincodeStubInterface, indexStr string, id string) (error) {
 
 	// Retrieve existing index
 	indexAsBytes, err := stub.GetState(indexStr)
@@ -435,7 +435,7 @@ func append_id(stub *shim.ChaincodeStub, indexStr string, id string) (error) {
 	return nil
 }
 
-func remove_id(stub *shim.ChaincodeStub, indexStr string, id string) (error) {
+func remove_id(stub shim.ChaincodeStubInterface, indexStr string, id string) (error) {
 
 	// Retrieve existing index
 	indexAsBytes, err := stub.GetState(indexStr)
